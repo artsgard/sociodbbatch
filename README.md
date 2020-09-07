@@ -47,7 +47,7 @@ For the moment they are all Postgres, but soon I will implement a different vend
 A Batch (Spring-Batch) can be pretty complicated, but its concept is rather simple: Process (big) data on the basis of a single line/ record. The number of records processed in memory is called a chunck (similar to paginate of a JPA or REST-service). The core-part of this process is the step which consits of a reader-processor-writer. A step can also be a tasklet which does on single thing, like e.g. clearing a db-table. At com.artsgard.sociodbbatch.config BatchFlowConfig you may observe a step process of three steps each opdating a different table 1) SocioRegister db SocioModel 2) SocioAssociatedSocio (with chunks of 20 records/ lines each). The third step will update the Account table of the SocioBank db:
 
 	@Bean
-  	public Step socioStep() throws Exception {
+	public Step socioStep() throws Exception {
     		return stepBuilders.get("batchdbsocioStep-socio")
                 	.<SocioModel, SocioModel>chunk(20)
                 	.reader(socioReader)

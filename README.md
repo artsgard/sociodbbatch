@@ -40,7 +40,7 @@ The second SpringBatch sociodbbatch runs on a schedular (see ScheduledTasks clas
   
   3) The SocioBank db socio_bank_db
 
-For the moment they are all Postgres, but soon I will implement a different vendor for each (MySQL meat-data, Postrgres SocioRegister, Oracle-thin SocioBank).
+For the moment they are all Postgres, but soon I will implement a different vendor for each (MySQL batch meta-data, Postrgres SocioRegister, Oracle-thin SocioBank).
 
 ### What are Batches in General
 
@@ -87,6 +87,6 @@ A Batch (Spring-Batch) can be pretty complicated, but its concept is rather simp
 	
 	3) In case a socio has not logged into his/ her account for more than a month the boolean flag active will be set to false (this will only work when the Token-Spring-Security has been implemented)
 
-That is about all concerning the Batch. I will start soon to implement the security part but first I will do all the Docker images and implement a config server.
+That is about all concerning the Batch. I will start soon to implement the security part but first I will do all the Docker images and implement a simple Spring-Cloud config server.
 
 Still pending Batch-testing!

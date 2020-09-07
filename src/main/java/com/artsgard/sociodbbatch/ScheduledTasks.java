@@ -43,16 +43,16 @@ public class ScheduledTasks {
     @Autowired
     private AssociatedSocioRepository repo;
 
-    @Scheduled(cron = "0 35 11 * * *", zone = "Europe/Paris")
+    // second, minute, hour, day of month, month, day(s) of week
+    @Scheduled(cron = "0 10 10 * * *", zone = "Europe/Paris")
 
     public void schedule() throws JobExecutionAlreadyRunningException, JobRestartException, JobParametersInvalidException, JobInstanceAlreadyCompleteException {
-        System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<run now");
         JobParameters jobParameters = new JobParametersBuilder()
                 .addDate("sociojob-date", new Date())
                 .toJobParameters();
 
         JobExecution execution = jobLauncher.run(job, jobParameters);
         log.info("execution.getStatus(): " + execution.getStatus());
-        log.info("The time is now {}", dateFormat.format(new Date())); 
+        log.info("Time of execution: ", dateFormat.format(new Date())); 
     }
 }

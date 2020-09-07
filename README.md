@@ -81,7 +81,7 @@ A Batch (Spring-Batch) can be pretty complicated, but its concept is rather simp
 
 ### What does SocioDbBatch do
 
-	1) When a new socio registers the Batch will note that fact (register date) and when the schedular runs the Batch (every 24 hours) the batch will open a account for this new socio and donated a bonus of 20EUR (nice hè) -> the third step of the flow;
+	1) When a new socio registers the Batch will note that fact (register date) and when the schedular runs the Batch (every 24 hours at 10.10) the batch will open a account for this new socio and donated a bonus of 20EUR (nice hè) -> the third step of the flow;
 	
 	2) When a socio invites another socio (associated-socio) the field AssociatedSocioState will be changed to PENDING. The invited associated-socio has one month to respond (ACCEPTED/ DENIED). After one month has passed the Batch will change the field into EXPIRED;
 	

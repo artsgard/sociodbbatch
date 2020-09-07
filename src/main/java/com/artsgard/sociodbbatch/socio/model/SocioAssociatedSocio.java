@@ -2,6 +2,7 @@ package com.artsgard.sociodbbatch.socio.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -12,11 +13,9 @@ import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import lombok.Data;
 
-/**
- * 
- * @author artsgard
- */
+@Data
 @Entity(name = "SocioAssociatedSocio")
 @Table(name = "socio_associated_socio")
 @IdClass(SocioAssociatedSocioId.class)
@@ -38,14 +37,25 @@ public class SocioAssociatedSocio implements Serializable {
     private Long socioId;
     
     @Id
-    @Column(name = "associated_socio_id", nullable = true) private Long associatedSocioId;
+    @Column(name = "associated_socio_id", nullable = true)
+    private Long associatedSocioId;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "associated_socio_id", updatable = false, insertable = false, referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY,
+        cascade =
+        {
+               // CascadeType.DETACH,
+              //  CascadeType.MERGE,
+              //  CascadeType.REFRESH,
+               // CascadeType.PERSIST,
+                CascadeType.REMOVE
+        })
+    @JoinColumn(name = "socio_id", updatable = false, insertable = false,
+            referencedColumnName = "id")
     private SocioModel socio;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "associated_socio_id", updatable = false, insertable = false, referencedColumnName = "id")
+    @ManyToOne//(fetch = FetchType.LAZY, cascade =CascadeType.REMOVE)
+    @JoinColumn(name = "associated_socio_id", updatable = false, insertable = false,
+            referencedColumnName = "id")
     private SocioModel associatedSocio;
     
     public enum AssociatedSocioState {
@@ -58,52 +68,4 @@ public class SocioAssociatedSocio implements Serializable {
     
     @Column(name = "associated_socio_date", nullable = true)
     private Timestamp associatedSocioDate;
-
-    public long getSocioId() {
-        return socioId;
-    }
-
-    public void setSocioId(long socioId) {
-        this.socioId = socioId;
-    }
-
-    public long getAssociatedSocioId() {
-        return associatedSocioId;
-    }
-
-    public void setAssociatedSocioId(long associatedSocioId) {
-        this.associatedSocioId = associatedSocioId;
-    }
-
-    public SocioModel getSocio() {
-        return socio;
-    }
-
-    public void setSocio(SocioModel socio) {
-        this.socio = socio;
-    }
-
-    public SocioModel getAssociatedSocio() {
-        return associatedSocio;
-    }
-
-    public void setAssociatedSocio(SocioModel associatedSocio) {
-        this.associatedSocio = associatedSocio;
-    }
-
-    public AssociatedSocioState getAssociatedSocioState() {
-        return associatedSocioState;
-    }
-
-    public void setAssociatedSocioState(AssociatedSocioState associatedSocioState) {
-        this.associatedSocioState = associatedSocioState;
-    }
-
-    public Timestamp getAssociatedSocioDate() {
-        return associatedSocioDate;
-    }
-
-    public void setAssociatedSocioDate(Timestamp associatedSocioDate) {
-        this.associatedSocioDate = associatedSocioDate;
-    }
 }

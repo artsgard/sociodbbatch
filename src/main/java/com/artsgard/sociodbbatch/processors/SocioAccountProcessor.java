@@ -1,12 +1,9 @@
 package com.artsgard.sociodbbatch.processors;
 
 import com.artsgard.sociodbbatch.bank.model.Account;
-import com.artsgard.sociodbbatch.bank.repository.AccountRepository;
 import com.artsgard.sociodbbatch.socio.model.SocioModel;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.batch.item.ItemProcessor;
-import com.artsgard.sociodbbatch.socio.repository.SocioRepository;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;

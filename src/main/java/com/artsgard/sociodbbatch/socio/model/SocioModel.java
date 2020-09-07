@@ -19,15 +19,11 @@ import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * 
- * @author artsgard
- */
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "socio")
-public class SocioModel implements Serializable {
+@Table(name = "socio") //, catalog = "socio_db") , schema = "socio_db") , schema = "socio_db")
+public class SocioModel implements Serializable { // UserDetails
 
     public SocioModel(Long id, String username, String password, String firstName, String lastName, String email, 
             Boolean active, List<LanguageModel> socioLanguages, List<AddressModel> socioAddresses) {
@@ -78,11 +74,11 @@ public class SocioModel implements Serializable {
     private Boolean active;
  
     @JsonIgnore
-    @OneToMany(targetEntity=SocioAssociatedSocio.class, mappedBy="socio")
+    @OneToMany(targetEntity=SocioAssociatedSocio.class, mappedBy="socio", cascade = CascadeType.REMOVE)
     private List<SocioAssociatedSocio> socios;
     
     @JsonIgnore
-    @OneToMany(targetEntity=SocioAssociatedSocio.class, mappedBy="socio") //associatedSocio
+    @OneToMany(targetEntity=SocioAssociatedSocio.class, mappedBy="socio", cascade = CascadeType.REMOVE)
     private List<SocioAssociatedSocio> associatedSocios;
     
     @ManyToMany
@@ -91,7 +87,7 @@ public class SocioModel implements Serializable {
     private List<RoleModel> socioRoles;
 
     @NotNull
-    @ManyToMany()
+    @ManyToMany
     @JoinTable(name = "socio_language", joinColumns = @JoinColumn(name = "socio_id"),
             inverseJoinColumns = @JoinColumn(name = "language_id"))
     private List<LanguageModel> socioLanguages;

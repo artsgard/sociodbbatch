@@ -1,13 +1,15 @@
 package com.artsgard.sociodbbatch.bank.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -25,26 +27,23 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity(name = "AccountTransfer")
 @Table(name = "account_transfer")
-@IdClass(AccountTransferId.class)
 public class AccountTransfer implements Serializable {
 
     @Id
-    @Column(name="account_id", nullable = true)
-    private Long accountId;
-
-    @Id
-    @Column(name="account_transfer_id", nullable = true)
-    private Long accountTransferId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
+    @JsonIgnoreProperties("sourceTransfers")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id", updatable = false, insertable = false,
+    @JoinColumn(name = "account_source_id", updatable = true, insertable = true,
             referencedColumnName = "id")
-    private Account account;
+    private Account accountSource;
     
+    @JsonIgnoreProperties("destinyTransfers")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_transfer_id", updatable = false, insertable = false,
+    @JoinColumn(name = "account_destiny_id", updatable = true, insertable = true,
             referencedColumnName = "id")
-    private Account accountTransfer;
+    private Account accountDestiny;
     
     @Column(name="amount", nullable = false)
     private BigDecimal amount;
@@ -54,5 +53,4 @@ public class AccountTransfer implements Serializable {
     
     @Column(name="transfer_date", nullable = false)
     private Date transferDate;
-  
 }

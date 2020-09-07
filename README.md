@@ -44,28 +44,47 @@ For the moment they are all Postgres, but soon I will implement a different vend
 
 ### What are Batches in General
 
-A Batch (Spring-Batch) can be pretty complicated, but its concept is rather simple: Process (big) data on the basis of a single line/ record. The number of records processed in memory is called a chunck (similar to paginate of a JPA or REST-service). The core-part of this process is the step which consits of a reader-processor-writer. A step can also be a tasklet which does on single thing like e.g. clearing a db-table. At com.artsgard.sociodbbatch.config BatchFlowConfig you may observe a step process of two steps each opdating a different table 1) SocioModel 2) SocioAssociatedSocio (with chunks of 20 records/ lines each):
+A Batch (Spring-Batch) can be pretty complicated, but its concept is rather simple: Process (big) data on the basis of a single line/ record. The number of records processed in memory is called a chunck (similar to paginate of a JPA or REST-service). The core-part of this process is the step which consits of a reader-processor-writer. A step can also be a tasklet which does on single thing, like e.g. clearing a db-table. At com.artsgard.sociodbbatch.config BatchFlowConfig you may observe a step process of three steps each opdating a different table 1) SocioRegister db SocioModel 2) SocioAssociatedSocio (with chunks of 20 records/ lines each). The third step will update the Account table of the SocioBank db:
 
-  @Bean
-  public Step socioStep() throws Exception {
-    return stepBuilders.get("batchdbsocioStep-socio")
-                .<SocioModel, SocioModel>chunk(20)
-                .reader(socioReader)
-                .processor(socioProcessor)
-                .writer(socioWriter)
-                .transactionManager(socioTransactionManager)
-                .build();
-    }
+	@Bean
+  	public Step socioStep() throws Exception {
+    		return stepBuilders.get("batchdbsocioStep-socio")
+                	.<SocioModel, SocioModel>chunk(20)
+                	.reader(socioReader)
+                	.processor(socioProcessor)
+                	.writer(socioWriter)
+                	.transactionManager(socioTransactionManager)
+                	.build();
+    	}
     
-    @Bean
-    public Step associatedSocioStep() throws Exception {
-        return stepBuilders.get("batchdbsocioStep-associated")
-                .<SocioAssociatedSocio, SocioAssociatedSocio>chunk(20)
-                .reader(associatedReader)
-                .processor(associatedProcessor)
-                .writer(associatedWriter)
-                .transactionManager(socioTransactionManager)
-                .build();
-    }
+    	@Bean
+    	public Step associatedSocioStep() throws Exception {
+        	return stepBuilders.get("batchdbsocioStep-associated")
+                	.<SocioAssociatedSocio, SocioAssociatedSocio>chunk(20)
+                	.reader(associatedReader)
+                	.processor(associatedProcessor)
+                	.writer(associatedWriter)
+                	.transactionManager(socioTransactionManager)
+                	.build();
+    	}
+	
+	@Bean
+    	public Step accountStep() throws Exception {
+        	return stepBuilders.get("batchdbsocioStep-account")
+                	.<SocioModel, Account>chunk(20)
+                	.reader(socioReader)
+                	.processor(socioAccountProcessor)
+                	.writer(accountWriter)
+                	.transactionManager(bankTransactionManager)
+                	.build();
+    	}
 
 ### What does SocioDbBatch do
+
+	1) When a new socio registers the Batch will note that fact (register date) and when the schedular runs the Batch (every 24 hours) the batch will open a account for this new socio and donated a bonus of 20EUR (nice hè) -> the third step of the flow;
+	
+	2) When a socio invites another socio (associated-socio) the field AssociatedSocioState will be changed to PENDING. The invited associated-socio has one month to respond (ACCEPTED/ DENIED). After one month has passed the Batch will change the field into EXPIRED;
+	
+	3) In case a socio has not logged into his/ her account for more than a month the boolean flag active will be set to false () this will only work when the Token-Spring-Security has been implemented)
+
+That is about all concerning the Batch. I will start soon to implement the security part but first I will do all the Docker images and implement a config server.

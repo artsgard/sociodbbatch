@@ -56,16 +56,16 @@ A Batch (Spring-Batch) can be pretty complicated, but its concept is rather simp
 			.transactionManager(socioTransactionManager)
 			.build();
 	}
-    
-    	@Bean
-    	public Step associatedSocioStep() throws Exception {
-        	return stepBuilders.get("batchdbsocioStep-associated")
-                	.<SocioAssociatedSocio, SocioAssociatedSocio>chunk(20)
-                	.reader(associatedReader)
-                	.processor(associatedProcessor)
-                	.writer(associatedWriter)
-                	.transactionManager(socioTransactionManager)
-                	.build();
+	
+	@Bean
+	public Step associatedSocioStep() throws Exception {
+		return stepBuilders.get("batchdbsocioStep-associated")
+			.<SocioAssociatedSocio, SocioAssociatedSocio>chunk(20)
+			.reader(associatedReader)
+			.processor(associatedProcessor)
+			.writer(associatedWriter)
+			.transactionManager(socioTransactionManager)
+			.build();
     	}
 	
 	@Bean
